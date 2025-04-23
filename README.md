@@ -2,6 +2,10 @@
 
 **CircuitSim** es un simulador interactivo de circuitos eléctricos desarrollado en Java. Actualmente se encuentra en una etapa temprana de desarrollo: permite visualizar el circuito, reacomodarlo libremente y calcular los voltajes en los nodos a través del método de Análisis Nodal Modificado (MNA).
 
+<p align="center">
+  <img src="docs/captura.png" alt="Captura de CircuitSim" width="600"/>
+</p>
+
 ---
 
 ## Tabla de Contenidos
