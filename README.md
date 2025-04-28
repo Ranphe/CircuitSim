@@ -32,7 +32,7 @@ Es una versión temprana del proyecto enfocada en el análisis visual estático,
 ## Características
 
 - Interfaz gráfica de usuario interactiva.
-- Soporte de componentes: resistencias, fuentes de voltaje y corriente.
+- Soporte de componentes: resistencias y fuentes de voltaje.
 - Análisis automático usando matrices MNA.
 - Visualización gráfica personalizada.
 - Exportación del circuito como imagen PNG.
@@ -43,21 +43,21 @@ Es una versión temprana del proyecto enfocada en el análisis visual estático,
 ## Requisitos del Sistema
 
 - **JDK (Java Development Kit)** versión 11 o superior
-- **Un entorno de desarrollo Java como **IntelliJ IDEA**, **Eclipse** o **NetBeans**.
+- Un entorno de desarrollo Java como **IntelliJ IDEA**, **Eclipse** o **NetBeans**.
 
 ---
 
 ## Instalación
 
-Clona este repositorio:
+1. Clona este repositorio:
 
 ```bash
 git clone https://github.com/Ranphe/CircuitSim.git
 ```
 
-Importa el proyecto en tu IDE preferido.
+2. Importa el proyecto en tu IDE preferido.
 
-Compila y ejecuta el proyecto:
+3. Compila y ejecuta el proyecto:
 - Navega a la clase principal `Main`.
 - Ejecuta la aplicación para iniciar el simulador.
 
@@ -118,7 +118,7 @@ Las contribuciones son siempre bienvenidas. Para colaborar:
 
 ## Licencia
 
-Este proyecto está licenciado bajo los términos de la Licencia Pública General Affero de GNU v3.0 (**AGPL-3.0**). Consulta el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está licenciado bajo los términos de la Licencia Pública General Affero de GNU v3.0 (**AGPL-3.0**). Consulta el archivo [LICENSE](LICENSE.md) para más detalles.
 
 ---
 

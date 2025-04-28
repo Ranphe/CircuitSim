@@ -47,7 +47,7 @@ public class CircuitoParser {
             // Procesamiento parte 3
             String valorStr = partes[3];
             if (elemento == 'R') {
-                String prefijoResistencia = ValorElectrico.extraerPrefijo(valorStr);
+                String prefijoResistencia = FormatoElectrico.extraerPrefijo(valorStr);
                 if (prefijoResistencias.equals("?")) {
                     prefijoResistencias = prefijoResistencia;
                 } else if (!prefijoResistencia.equals(prefijoResistencias)) {
@@ -60,9 +60,11 @@ public class CircuitoParser {
             // Armado de objeto Componente y almacenamiento en listas
             Componente componente;
             if (elemento != 'C') {
-                double valor = ValorElectrico.procesarValor(elemento, valorStr, prefijoResistencias);
-                char sufijo = ValorElectrico.extraerSufijo(valorStr);
-                componente = new Componente(elemento, nodo1, nodo2, valor, prefijoResistencias, sufijo);
+                ValorElectrico valor = new ValorElectrico();
+                valor.setNumero(FormatoElectrico.procesarValor(elemento, valorStr, prefijoResistencias));
+                valor.setPrefijo(prefijoResistencias);
+                valor.setSufijo(FormatoElectrico.extraerSufijo(valorStr));
+                componente = new Componente(elemento, nodo1, nodo2, valor);
             } else {
                 componente = new Componente(elemento, nodo1, nodo2);
             }
@@ -80,11 +82,15 @@ public class CircuitoParser {
 
         // Asignar prefijo y sufijo a todos los nodos
         for (Nodo nodo : listaNodos) {
-            nodo.setPrefijo(prefijoResistencias);
-            nodo.setSufijo('V');
+            nodo.getValor().setPrefijo(prefijoResistencias);
+            nodo.getValor().setSufijo('V');
         }
 
-        return new Circuito(listaComponentes, listaNodos, mapaIndicesNodosTotales, mapaIndicesNodosCanonicos, mapaAdyacencia);
+        // Asignar sufijo a corriente total
+        ValorElectrico corrienteTotal = new ValorElectrico();
+        corrienteTotal.setSufijo('A');
+
+        return new Circuito(listaComponentes, listaNodos, mapaIndicesNodosTotales, mapaIndicesNodosCanonicos, mapaAdyacencia, corrienteTotal);
     }
 
     private static void insertarOrdenado(String nombre, Nodo nodo, Map<String, Nodo> mapaNodos, List<Nodo> listaNodos) {
@@ -118,8 +124,8 @@ public class CircuitoParser {
 
     private static int compararNombresNodos(String nombreNodo1, String nombreNodo2) {
         // Extraer y convertir a entero la parte numérica de ambos nombres de nodo para compararlos numéricamente
-        int numeroNodo1 = Integer.parseInt(ValorElectrico.extraerValor(nombreNodo1));
-        int numeroNodo2 = Integer.parseInt(ValorElectrico.extraerValor(nombreNodo2));
+        int numeroNodo1 = Integer.parseInt(FormatoElectrico.extraerValor(nombreNodo1));
+        int numeroNodo2 = Integer.parseInt(FormatoElectrico.extraerValor(nombreNodo2));
 
         // Priorizar nodos distintos de tierra, colocando los nodos con valor 0 al final del ordenamiento
         if (numeroNodo1 == 0 && numeroNodo2 != 0) return 1;
@@ -130,8 +136,8 @@ public class CircuitoParser {
         if (cmp != 0) return cmp;
 
         // Extraer los sufijos alfabéticos de los nombres de nodo para compararlos si los números son iguales
-        char sufijoNodo1 = ValorElectrico.extraerSufijo(nombreNodo1);
-        char sufijoNodo2 = ValorElectrico.extraerSufijo(nombreNodo2);
+        char sufijoNodo1 = FormatoElectrico.extraerSufijo(nombreNodo1);
+        char sufijoNodo2 = FormatoElectrico.extraerSufijo(nombreNodo2);
 
         return Character.compare(sufijoNodo1, sufijoNodo2);
     }
@@ -154,7 +160,7 @@ public class CircuitoParser {
         for (Map.Entry<String, Nodo> entrada : mapaNodos.entrySet()) {
             Nodo nodo = entrada.getValue();
             String nombreNodo = entrada.getKey();
-            int indiceNodo = Integer.parseInt(ValorElectrico.extraerValor(nombreNodo)) - 1;
+            int indiceNodo = Integer.parseInt(FormatoElectrico.extraerValor(nombreNodo)) - 1;
             mapaIndicesNodosCanonicos.put(nodo, indiceNodo);
         }
 

@@ -101,7 +101,7 @@ public class LayoutCircuito {
             // Extrae el nodo actual de la cola y obtiene su distancia, voltaje e índice en el circuito.
             Nodo nodoActual = colaNodos.poll();
             int distanciaActual = distancias.get(nodoActual);
-            double voltajeActual = nodoActual.getValor();
+            double voltajeActual = nodoActual.getValor().getNumero();
             int indiceNodoActual = mapaIndicesNodosCompletos.get(nodoActual);
 
             // Si se alcanza el nodo tierra, retorna la distancia acumulada desde el origen.
@@ -116,7 +116,7 @@ public class LayoutCircuito {
                 if (nodosVisitados.contains(nodoVecino)) continue;
 
                 // Obtiene el voltaje y el índice del nodo vecino para evaluar si cumple con las condiciones de avance.
-                double voltajeNodoVecino = nodoVecino.getValor();
+                double voltajeNodoVecino = nodoVecino.getValor().getNumero();
                 int indiceNodoVecino = mapaIndicesNodosCompletos.getOrDefault(nodoVecino, -1);
 
                 // Si el voltaje no aumenta y la dirección es válida, actualiza la distancia y encola al vecino para continuar el recorrido.

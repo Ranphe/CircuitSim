@@ -1,6 +1,6 @@
 # LICENCIA
 
-Recicland está licenciado bajo la **Licencia Pública General Affero de GNU v3.0 (AGPL-3.0)**.
+CircuitSim está licenciado bajo la **Licencia Pública General Affero de GNU v3.0 (AGPL-3.0)**.
 
 ## Usted es libre de:
 

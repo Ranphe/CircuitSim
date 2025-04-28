@@ -26,7 +26,7 @@ public class MNA {
             Nodo nodoB = componente.getNodoB();
             int i = indices.get(nodoA);
             int j = indices.get(nodoB);
-            double valor = componente.getValor();
+            double valor = componente.getValor().getNumero();
 
             // Procesamiento de componentes según su tipo
             if (elemento == 'R') {
@@ -123,11 +123,16 @@ public class MNA {
         for(Nodo nodo : circuito.getNodos()) {
             int indice = indices.getOrDefault(nodo, -1);
             if (indice >= 0 && indice < numNodosSinTierra) {
-                nodo.setValor(soluciones[indice]);
+                nodo.getValor().setNumero(soluciones[indice]);
             } else {
-                nodo.setValor(0.0);
+                nodo.getValor().setNumero(0.0);
             }
         }
+    }
+
+    public static void asignarCorrienteTotalCircuito(Circuito circuito, double[] soluciones) {
+        int ultimaColumna = soluciones.length - 1;
+        circuito.getCorrienteTotal().setNumero(soluciones[ultimaColumna] * -1.0);
     }
 
     private static void intercambiarFilas(double[][] matrizMNA, int fila1, int fila2) {

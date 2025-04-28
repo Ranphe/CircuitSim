@@ -9,17 +9,19 @@ public class Circuito {
     private final Map<Nodo, Integer> mapaIndicesNodosCompletos;
     private final Map<Nodo, Integer> mapaIndicesNodosCanonicos;
     private final Map<Nodo, List<Nodo>> mapaAdyacencia;
+    private final ValorElectrico corrienteTotal;
     private final int numComponentes;
     private final int numNodosTotales;
     private final int numNodosCanonicos;
     private final int numFuentesVoltaje;
 
-    public Circuito(List<Componente> componentes, List<Nodo> nodos, Map<Nodo, Integer> mapaIndicesNodosCompletos, Map<Nodo, Integer> mapaIndicesNodosCanonicos, Map<Nodo, List<Nodo>> mapaAdyacencia) {
+    public Circuito(List<Componente> componentes, List<Nodo> nodos, Map<Nodo, Integer> mapaIndicesNodosCompletos, Map<Nodo, Integer> mapaIndicesNodosCanonicos, Map<Nodo, List<Nodo>> mapaAdyacencia, ValorElectrico corrienteTotal) {
         this.componentes = componentes;
         this.nodos = nodos;
         this.mapaIndicesNodosCompletos = mapaIndicesNodosCompletos;
         this.mapaIndicesNodosCanonicos = mapaIndicesNodosCanonicos;
         this.mapaAdyacencia = mapaAdyacencia;
+        this.corrienteTotal = corrienteTotal;
         this.numComponentes = calcularNumComponentes();
         this.numNodosTotales = calcularNumNodosTotales();
         this.numNodosCanonicos = calcularNumNodosCanonicos();
@@ -60,6 +62,10 @@ public class Circuito {
 
     public int getNumFuentesVoltaje() {
         return numFuentesVoltaje;
+    }
+
+    public ValorElectrico getCorrienteTotal() {
+        return corrienteTotal;
     }
 
     private int calcularNumComponentes() {

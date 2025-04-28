@@ -1,39 +1,15 @@
 public class Nodo {
-    private double valor;
-    private String prefijo;
-    private char sufijo;
+    private ValorElectrico valor;
 
-    public Nodo(double valor, String prefijo, char sufijo) {
+    public Nodo(ValorElectrico valor) {
         this.valor = valor;
-        this.prefijo = prefijo;
-        this.sufijo = sufijo;
     }
 
     public Nodo() {
-        this(0.0, "", '\0');
+        this(new ValorElectrico());
     }
 
-    public double getValor() {
+    public ValorElectrico getValor() {
         return valor;
-    }
-
-    public String getPrefijo() {
-        return prefijo;
-    }
-
-    public char getSufijo() {
-        return sufijo;
-    }
-
-    public void setValor(double valor) {
-        this.valor = valor;
-    }
-
-    public void setPrefijo(String prefijo) {
-        this.prefijo = prefijo;
-    }
-
-    public void setSufijo(char sufijo) {
-        this.sufijo = sufijo;
     }
 }

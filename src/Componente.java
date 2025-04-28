@@ -2,21 +2,17 @@ public class Componente {
     private char elemento;
     private Nodo nodoA;
     private Nodo nodoB;
-    private double valor;
-    private String prefijo;
-    private char sufijo;
+    private ValorElectrico valor;
 
-    public Componente(char elemento, Nodo nodoA, Nodo nodoB, double valor, String prefijo, char sufijo) {
+    public Componente(char elemento, Nodo nodoA, Nodo nodoB, ValorElectrico valor) {
         this.elemento = elemento;
         this.nodoA = nodoA;
         this.nodoB = nodoB;
         this.valor = valor;
-        this.prefijo = prefijo;
-        this.sufijo = sufijo;
     }
 
     public Componente(char elemento, Nodo nodoA, Nodo nodoB) {
-        this(elemento, nodoA, nodoB, 0.0, "", '\0');
+        this(elemento, nodoA, nodoB, new ValorElectrico());
     }
 
     public char getElemento() {
@@ -31,15 +27,7 @@ public class Componente {
         return nodoB;
     }
 
-    public double getValor() {
+    public ValorElectrico getValor() {
         return valor;
-    }
-
-    public String getPrefijo() {
-        return prefijo;
-    }
-
-    public char getSufijo() {
-        return sufijo;
     }
 }

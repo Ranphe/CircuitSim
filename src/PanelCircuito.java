@@ -144,7 +144,7 @@ public class PanelCircuito extends JPanel {
         g2.setStroke(trazoAntiguo);
     }
 
-    public void dibujarResistencia(Graphics2D g2, Point inicioPlano, Point finPlano, double valorResistencia, String prefijo, char sufijo) {
+    public void dibujarResistencia(Graphics2D g2, Point inicioPlano, Point finPlano, ValorElectrico valorResistencia) {
         // Si ambos puntos coinciden, no hay resistencia que dibujar
         if (inicioPlano.equals(finPlano)) return;
 
@@ -216,8 +216,10 @@ public class PanelCircuito extends JPanel {
         // Restaurar trazo para el texto
         g2.setStroke(trazoOriginal);
 
-        // Dibujar etiqueta con valor formateado, centrada y rotada
+        // Guardar transformaciones y color original
         AffineTransform atOriginal = g2.getTransform();
+
+        // Dibujar etiqueta con valor formateado, centrada y rotada
         g2.translate(xm, ym);
         double angulo = Math.atan2(dy, dx);
         if (Math.abs(dy) < 1e-3) angulo = 0;
@@ -226,17 +228,16 @@ public class PanelCircuito extends JPanel {
         // Prepara la fuente y calcula el ancho del texto formateado para centrarlo sobre la resistencia.
         g2.setFont(new Font("Arial", Font.PLAIN, TAMANO_FUENTE_TEXTO));
         FontMetrics fm = g2.getFontMetrics();
-        String texto = ValorElectrico.formatearValor(valorResistencia, prefijo, sufijo);
-        int anchoTexto = fm.stringWidth(texto);
+        int anchoTexto = fm.stringWidth(valorResistencia.toString());
 
         // Se dibuja un poco por encima del zigzag
-        g2.drawString(texto, -anchoTexto / 2, -ALTURA_PICO - 10);
+        g2.drawString(valorResistencia.toString(), -anchoTexto / 2, -ALTURA_PICO - 10);
 
         // Restaurar transformación y color
         g2.setTransform(atOriginal);
     }
 
-    public void dibujarFuente(Graphics2D g2, Point inicioPlano, Point finPlano, double valorFuente, String prefijo, char sufijo) {
+    public void dibujarFuente(Graphics2D g2, Point inicioPlano, Point finPlano, ValorElectrico valorFuente, ValorElectrico corrienteTotal) {
         // Si ambos puntos coinciden, nada que dibujar
         if (inicioPlano.equals(finPlano)) return;
 
@@ -285,23 +286,33 @@ public class PanelCircuito extends JPanel {
         // Restaurar trazo para no afectar otros dibujos
         g2.setStroke(trazoOriginal);
 
-        // Dibujar etiqueta de valor, rotada y centrada sobre el círculo
+        // Guardar transformaciones y color original
         AffineTransform atOriginal = g2.getTransform();
+
+        // Preparar sistema de coordenadas rotado y centrado para etiquetas de valor y corriente
         g2.translate(xc, yc);
         double angulo = -Math.atan2(dy, dx);
-        if (Math.abs(dy) < 1e-3) {
-            angulo = 0;
-        }
+        if (Math.abs(dy) < 1e-3) angulo = 0;
         g2.rotate(angulo);
 
-        // Configura la fuente y calcula el ancho del texto formateado para posicionarlo centrado sobre la fuente.
+        // Configura la fuente y calcula el alto del texto formateado para posicionarlo centrado sobre la fuente.
         g2.setFont(new Font("Arial", Font.PLAIN, TAMANO_FUENTE_TEXTO));
         FontMetrics fm = g2.getFontMetrics();
-        String texto = ValorElectrico.formatearValor(valorFuente, prefijo, sufijo);
-        int anchoTexto = fm.stringWidth(texto);
+        int altoTexto = fm.getAscent();
 
-        // Dibujar texto por encima del círculo
-        g2.drawString(texto, -anchoTexto / 2, (int)(-radio - 10));
+        // Dibujar texto valor fuente por encima del círculo
+        int anchoTextoValor = fm.stringWidth(valorFuente.toString());
+        g2.drawString(valorFuente.toString(), -anchoTextoValor / 2, (int)(-radio - 10));
+
+        // Dibujar texto corriente total debajo del círculo
+        g2.setColor(Color.BLUE);
+        int anchoTextoCorriente = fm.stringWidth(corrienteTotal.toString());
+        if (Math.abs(dy) < 1e-3) {
+            g2.drawString(corrienteTotal.toString(), -anchoTextoCorriente / 2, (int)(radio + altoTexto + 10));
+        } else {
+            g2.rotate(Math.PI);
+            g2.drawString(corrienteTotal.toString(), -anchoTextoCorriente / 2, (int)(-radio - 10));
+        }
 
         // Restaurar transformaciones y color original
         g2.setTransform(atOriginal);
@@ -387,27 +398,26 @@ public class PanelCircuito extends JPanel {
         // Dibujar nodos y etiquetas
         g2.setFont(new Font("Arial", Font.PLAIN, TAMANO_FUENTE_TEXTO));
         for (Nodo nodo : circuito.getNodos()) {
-            Point p = posicionesNodos.get(nodo);
-            if (p == null) continue;
+            Point posicionNodo = posicionesNodos.get(nodo);
+            if (posicionNodo == null) continue;
             g2.setColor(Color.BLACK);
-            g2.fillOval(p.x - TAMANO_NODO / 2, p.y - TAMANO_NODO / 2, TAMANO_NODO, TAMANO_NODO);
-            String etiqueta = ValorElectrico.formatearValor(nodo.getValor(), nodo.getPrefijo(), nodo.getSufijo());
+            g2.fillOval(posicionNodo.x - TAMANO_NODO / 2, posicionNodo.y - TAMANO_NODO / 2, TAMANO_NODO, TAMANO_NODO);
             g2.setColor(Color.BLUE);
             FontMetrics fm2 = g2.getFontMetrics();
-            g2.drawString(etiqueta, p.x - fm2.stringWidth(etiqueta) / 2, p.y - TAMANO_NODO);
+            g2.drawString(nodo.getValor().toString(), posicionNodo.x - fm2.stringWidth(nodo.getValor().toString()) / 2, posicionNodo.y - TAMANO_NODO);
         }
 
         // Dibujar componentes
         g2.setColor(Color.BLACK);
-        for (Componente comp : circuito.getComponentes()) {
-            char tipo = comp.getElemento();
-            Point pA = posicionesNodos.get(comp.getNodoA());
-            Point pB = posicionesNodos.get(comp.getNodoB());
+        for (Componente componente : circuito.getComponentes()) {
+            char tipo = componente.getElemento();
+            Point pA = posicionesNodos.get(componente.getNodoA());
+            Point pB = posicionesNodos.get(componente.getNodoB());
             if (pA == null || pB == null) continue;
             switch (tipo) {
                 case 'C' -> dibujarCable(g2, pA, pB);
-                case 'R' -> dibujarResistencia(g2, pA, pB, comp.getValor(), comp.getPrefijo(), comp.getSufijo());
-                case 'F', 'I' -> dibujarFuente(g2, pA, pB, comp.getValor(), comp.getPrefijo(), comp.getSufijo());
+                case 'R' -> dibujarResistencia(g2, pA, pB, componente.getValor());
+                case 'F', 'I' -> dibujarFuente(g2, pA, pB, componente.getValor(), circuito.getCorrienteTotal());
                 default -> throw new IllegalArgumentException("Componente no reconocido: '" + tipo + "'");
             }
         }
