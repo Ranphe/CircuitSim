@@ -23,7 +23,7 @@ public class CircuitoParser {
 
             // Procesamiento parte 0
             char elemento = partes[0].charAt(0);
-            Set<Character> tiposValidos = Set.of('R', 'C', 'F', 'I');
+            Set<Character> tiposValidos = Set.of('C', 'R', 'F');
             if (!tiposValidos.contains(elemento)) throw new IllegalArgumentException("Tipo de componente desconocido '" + elemento + "' en línea: '" + lineaOriginal + "'");
 
             // Procesamiento parte 1
@@ -86,11 +86,7 @@ public class CircuitoParser {
             nodo.getValor().setSufijo('V');
         }
 
-        // Asignar sufijo a corriente total
-        ValorElectrico corrienteTotal = new ValorElectrico();
-        corrienteTotal.setSufijo('A');
-
-        return new Circuito(listaComponentes, listaNodos, mapaIndicesNodosTotales, mapaIndicesNodosCanonicos, mapaAdyacencia, corrienteTotal);
+        return new Circuito(listaComponentes, listaNodos, mapaIndicesNodosTotales, mapaIndicesNodosCanonicos, mapaAdyacencia);
     }
 
     private static void insertarOrdenado(String nombre, Nodo nodo, Map<String, Nodo> mapaNodos, List<Nodo> listaNodos) {

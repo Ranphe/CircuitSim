@@ -115,6 +115,11 @@ public class PanelCircuito extends JPanel {
         // Si ambos puntos coinciden, no dibujar nada
         if (inicioPlano.equals(finPlano)) return;
 
+        // Guardar el estado actual del contexto gráfico (color, trazo y transformación)
+        Color colorOriginal = g2.getColor();
+        Stroke trazoOriginal = g2.getStroke();
+        AffineTransform transformacionOriginal = g2.getTransform();
+
         // Suavizar líneas
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -132,21 +137,28 @@ public class PanelCircuito extends JPanel {
         double xf = finPlano.x   - dx * factor;
         double yf = finPlano.y   - dy * factor;
 
-        // Guardar y aplicar nuevo estilo de trazo
-        Stroke trazoAntiguo = g2.getStroke();
+        // Aplicar nuevo estilo de trazo y color
         g2.setStroke(new BasicStroke(GROSOR_ARISTA, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2.setColor(Color.BLACK);
 
         // Dibujar la línea
         Line2D.Double linea = new Line2D.Double(xi, yi, xf, yf);
         g2.draw(linea);
 
-        // Restaurar trazo original
-        g2.setStroke(trazoAntiguo);
+        // Restaurar el estado original del contexto gráfico
+        g2.setColor(colorOriginal);
+        g2.setStroke(trazoOriginal);
+        g2.setTransform(transformacionOriginal);
     }
 
     public void dibujarResistencia(Graphics2D g2, Point inicioPlano, Point finPlano, ValorElectrico valorResistencia) {
         // Si ambos puntos coinciden, no hay resistencia que dibujar
         if (inicioPlano.equals(finPlano)) return;
+
+        // Guardar el estado actual del contexto gráfico (color, trazo y transformación)
+        Color colorOriginal = g2.getColor();
+        Stroke trazoOriginal = g2.getStroke();
+        AffineTransform transformacionOriginal = g2.getTransform();
 
         // Parámetros del zigzag
         final int ANCHO_ZIGZAG = 60;
@@ -177,11 +189,9 @@ public class PanelCircuito extends JPanel {
         double xg1 = xm + dx * factorGap;
         double yg1 = ym + dy * factorGap;
 
-        // Guardar estilo original
-        Stroke trazoOriginal = g2.getStroke();
-
         // Dibujar los brazos rectos de la resistencia
         g2.setStroke(new BasicStroke(GROSOR_ARISTA, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2.setColor(Color.BLACK);
         g2.draw(new Line2D.Double(x0, y0, xg0, yg0));
         g2.draw(new Line2D.Double(xg1, yg1, x1, y1));
 
@@ -213,12 +223,6 @@ public class PanelCircuito extends JPanel {
             haciaArriba = !haciaArriba;
         }
 
-        // Restaurar trazo para el texto
-        g2.setStroke(trazoOriginal);
-
-        // Guardar transformaciones y color original
-        AffineTransform atOriginal = g2.getTransform();
-
         // Dibujar etiqueta con valor formateado, centrada y rotada
         g2.translate(xm, ym);
         double angulo = Math.atan2(dy, dx);
@@ -231,15 +235,23 @@ public class PanelCircuito extends JPanel {
         int anchoTexto = fm.stringWidth(valorResistencia.toString());
 
         // Se dibuja un poco por encima del zigzag
+        g2.setColor(Color.BLACK);
         g2.drawString(valorResistencia.toString(), -anchoTexto / 2, -ALTURA_PICO - 10);
 
-        // Restaurar transformación y color
-        g2.setTransform(atOriginal);
+        // Restaurar el estado original del contexto gráfico
+        g2.setColor(colorOriginal);
+        g2.setStroke(trazoOriginal);
+        g2.setTransform(transformacionOriginal);
     }
 
-    public void dibujarFuente(Graphics2D g2, Point inicioPlano, Point finPlano, ValorElectrico valorFuente, ValorElectrico corrienteTotal) {
+    public void dibujarFuente(Graphics2D g2, Point inicioPlano, Point finPlano, ValorElectrico valorFuente, ValorElectrico corriente) {
         // Si ambos puntos coinciden, nada que dibujar
         if (inicioPlano.equals(finPlano)) return;
+
+        // Guardar el estado actual del contexto gráfico (color, trazo y transformación)
+        Color colorOriginal = g2.getColor();
+        Stroke trazoOriginal = g2.getStroke();
+        AffineTransform transformacionOriginal = g2.getTransform();
 
         // Activar antialiasing
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -264,9 +276,6 @@ public class PanelCircuito extends JPanel {
         double xc = (x0 + x1) / 2.0;
         double yc = (y0 + y1) / 2.0;
 
-        // Guardar estilo de trazo original
-        Stroke trazoOriginal = g2.getStroke();
-
         // Dibujar líneas de conexión al círculo
         g2.setStroke(new BasicStroke(GROSOR_ARISTA, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2.setColor(Color.BLACK);
@@ -283,12 +292,6 @@ public class PanelCircuito extends JPanel {
         double yCir = yc - radio;
         g2.draw(new Ellipse2D.Double(xCir, yCir, DIAMETRO_CIRCULO, DIAMETRO_CIRCULO));
 
-        // Restaurar trazo para no afectar otros dibujos
-        g2.setStroke(trazoOriginal);
-
-        // Guardar transformaciones y color original
-        AffineTransform atOriginal = g2.getTransform();
-
         // Preparar sistema de coordenadas rotado y centrado para etiquetas de valor y corriente
         g2.translate(xc, yc);
         double angulo = -Math.atan2(dy, dx);
@@ -302,20 +305,23 @@ public class PanelCircuito extends JPanel {
 
         // Dibujar texto valor fuente por encima del círculo
         int anchoTextoValor = fm.stringWidth(valorFuente.toString());
+        g2.setColor(Color.BLACK);
         g2.drawString(valorFuente.toString(), -anchoTextoValor / 2, (int)(-radio - 10));
 
         // Dibujar texto corriente total debajo del círculo
+        int anchoTextoCorriente = fm.stringWidth(corriente.toString());
         g2.setColor(Color.BLUE);
-        int anchoTextoCorriente = fm.stringWidth(corrienteTotal.toString());
         if (Math.abs(dy) < 1e-3) {
-            g2.drawString(corrienteTotal.toString(), -anchoTextoCorriente / 2, (int)(radio + altoTexto + 10));
+            g2.drawString(corriente.toString(), -anchoTextoCorriente / 2, (int)(radio + altoTexto + 10));
         } else {
             g2.rotate(Math.PI);
-            g2.drawString(corrienteTotal.toString(), -anchoTextoCorriente / 2, (int)(-radio - 10));
+            g2.drawString(corriente.toString(), -anchoTextoCorriente / 2, (int)(-radio - 10));
         }
 
-        // Restaurar transformaciones y color original
-        g2.setTransform(atOriginal);
+        // Restaurar el estado original del contexto gráfico
+        g2.setColor(colorOriginal);
+        g2.setStroke(trazoOriginal);
+        g2.setTransform(transformacionOriginal);
     }
 
     private void calcularPosicionesIniciales() {
@@ -374,7 +380,6 @@ public class PanelCircuito extends JPanel {
         }
 
         // Aplicar pan y zoom
-        AffineTransform atOriginal = g2.getTransform();
         g2.translate(xOffset, yOffset);
         g2.scale(escala, escala);
 
@@ -408,7 +413,6 @@ public class PanelCircuito extends JPanel {
         }
 
         // Dibujar componentes
-        g2.setColor(Color.BLACK);
         for (Componente componente : circuito.getComponentes()) {
             char tipo = componente.getElemento();
             Point pA = posicionesNodos.get(componente.getNodoA());
@@ -417,12 +421,9 @@ public class PanelCircuito extends JPanel {
             switch (tipo) {
                 case 'C' -> dibujarCable(g2, pA, pB);
                 case 'R' -> dibujarResistencia(g2, pA, pB, componente.getValor());
-                case 'F', 'I' -> dibujarFuente(g2, pA, pB, componente.getValor(), circuito.getCorrienteTotal());
+                case 'F' -> dibujarFuente(g2, pA, pB, componente.getValor(), componente.getCorriente());
                 default -> throw new IllegalArgumentException("Componente no reconocido: '" + tipo + "'");
             }
         }
-
-        // Restaurar transformada original
-        g2.setTransform(atOriginal);
     }
 }

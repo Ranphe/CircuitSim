@@ -48,9 +48,6 @@ public class MNA {
                 }
                 matrizMNA[filaFuente][tamano] = valor;
                 filaFuente++;
-            } else if (elemento == 'I') {
-                if (i != indiceNodosTierra) matrizMNA[i][tamano] -= valor;
-                if (j != indiceNodosTierra) matrizMNA[j][tamano] += valor;
             }
         }
 
@@ -130,9 +127,16 @@ public class MNA {
         }
     }
 
-    public static void asignarCorrienteTotalCircuito(Circuito circuito, double[] soluciones) {
-        int ultimaColumna = soluciones.length - 1;
-        circuito.getCorrienteTotal().setNumero(soluciones[ultimaColumna] * -1.0);
+    public static void asignarCorrientesFuentes(Circuito circuito, double[] soluciones) {
+        int numNodosSinTierra = circuito.getNumNodosCanonicos() - 1;
+        int contadorFuentes = 0;
+        for (Componente componente : circuito.getComponentes()) {
+            if (componente.getElemento() == 'F') {
+                double corrienteFuente = soluciones[numNodosSinTierra + contadorFuentes] * -1.0;
+                componente.getCorriente().setNumero(corrienteFuente);
+                contadorFuentes++;
+            }
+        }
     }
 
     private static void intercambiarFilas(double[][] matrizMNA, int fila1, int fila2) {

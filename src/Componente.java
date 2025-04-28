@@ -3,12 +3,19 @@ public class Componente {
     private Nodo nodoA;
     private Nodo nodoB;
     private ValorElectrico valor;
+    private ValorElectrico corriente;
 
     public Componente(char elemento, Nodo nodoA, Nodo nodoB, ValorElectrico valor) {
         this.elemento = elemento;
         this.nodoA = nodoA;
         this.nodoB = nodoB;
         this.valor = valor;
+        if (elemento == 'F') {
+            this.corriente = new ValorElectrico();
+            this.corriente.setSufijo('A');
+        } else {
+            this.corriente = null;
+        }
     }
 
     public Componente(char elemento, Nodo nodoA, Nodo nodoB) {
@@ -29,5 +36,9 @@ public class Componente {
 
     public ValorElectrico getValor() {
         return valor;
+    }
+
+    public ValorElectrico getCorriente() {
+        return corriente;
     }
 }

@@ -1,7 +1,6 @@
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class Circuito {
     private final List<Componente> componentes;
@@ -9,19 +8,17 @@ public class Circuito {
     private final Map<Nodo, Integer> mapaIndicesNodosCompletos;
     private final Map<Nodo, Integer> mapaIndicesNodosCanonicos;
     private final Map<Nodo, List<Nodo>> mapaAdyacencia;
-    private final ValorElectrico corrienteTotal;
     private final int numComponentes;
     private final int numNodosTotales;
     private final int numNodosCanonicos;
     private final int numFuentesVoltaje;
 
-    public Circuito(List<Componente> componentes, List<Nodo> nodos, Map<Nodo, Integer> mapaIndicesNodosCompletos, Map<Nodo, Integer> mapaIndicesNodosCanonicos, Map<Nodo, List<Nodo>> mapaAdyacencia, ValorElectrico corrienteTotal) {
+    public Circuito(List<Componente> componentes, List<Nodo> nodos, Map<Nodo, Integer> mapaIndicesNodosCompletos, Map<Nodo, Integer> mapaIndicesNodosCanonicos, Map<Nodo, List<Nodo>> mapaAdyacencia) {
         this.componentes = componentes;
         this.nodos = nodos;
         this.mapaIndicesNodosCompletos = mapaIndicesNodosCompletos;
         this.mapaIndicesNodosCanonicos = mapaIndicesNodosCanonicos;
         this.mapaAdyacencia = mapaAdyacencia;
-        this.corrienteTotal = corrienteTotal;
         this.numComponentes = calcularNumComponentes();
         this.numNodosTotales = calcularNumNodosTotales();
         this.numNodosCanonicos = calcularNumNodosCanonicos();
@@ -64,10 +61,6 @@ public class Circuito {
         return numFuentesVoltaje;
     }
 
-    public ValorElectrico getCorrienteTotal() {
-        return corrienteTotal;
-    }
-
     private int calcularNumComponentes() {
         return (int) componentes.stream().filter(componente -> componente.getElemento() != 'C').count();
     }
@@ -81,8 +74,6 @@ public class Circuito {
     }
 
     private int calcularNumFuentes() {
-        Set<Character> tiposDeFuente = Set.of('F', 'I');
-
-        return (int) componentes.stream().filter(componente -> tiposDeFuente.contains(componente.getElemento())).count();
+        return (int) componentes.stream().filter(componente -> componente.getElemento() == 'F').count();
     }
 }

@@ -41,7 +41,7 @@ public class Main extends JFrame {
                     double[][] matrizMNA = MNA.generarMatriz(circuito);
                     double[] solucion = MNA.resolverMatriz(matrizMNA);
                     MNA.asignarVoltajesNodos(circuito, solucion);
-                    MNA.asignarCorrienteTotalCircuito(circuito, solucion);
+                    MNA.asignarCorrientesFuentes(circuito, solucion);
 
                     // DEBUG
                     Prueba.unitaria(circuito, matrizMNA, solucion);

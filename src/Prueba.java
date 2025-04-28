@@ -41,9 +41,11 @@ public class Prueba {
         }
 
         System.out.println("\n===============================");
-        System.out.println("       Corriente Total");
+        System.out.println("     CORRIENTES DE FUENTES");
         System.out.println("===============================");
-        System.out.println(circuito.getCorrienteTotal());
+        for (Componente componente : circuito.getComponentes()) {
+            if (componente.getElemento() == 'F') System.out.printf("Fuente (%s): %s\n", componente.getValor(), componente.getCorriente());
+        }
 
         System.out.println("\n===============================");
         System.out.println(" DISTANCIA DESDE CADA NODO HASTA TIERRA, SIGUIENDO CAÍDA DE VOLTAJE");
@@ -52,7 +54,7 @@ public class Prueba {
         for (Nodo nodo : circuito.getNodos()) {
             int distancia = LayoutCircuito.calcularDistanciaVoltaje(circuito.getNodos(), circuito.getMapaIndicesNodosCompletos(), circuito.getMapaAdyacencia(), nodo);
             int indice = circuito.getNodos().indexOf(nodo);
-            System.out.printf("Nodo %d | Voltaje: %-7s | Distancia a tierra: %d\n", indice, nodo.getValor(), distancia);
+            System.out.printf("Nodo %d | Voltaje: %-11s | Distancia a tierra: %d\n", indice, nodo.getValor(), distancia);
         }
     }
 }
