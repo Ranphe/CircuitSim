@@ -389,14 +389,10 @@ public class PanelCircuito extends JPanel {
         int altoVisible = (int) (getHeight() / escala);
         int xInicio = (int) (-xOffset / escala);
         int yInicio = (int) (-yOffset / escala);
-        for (int x = xInicio - (xInicio % tamanoGrid);
-             x < xInicio + anchoVisible;
-             x += tamanoGrid) {
+        for (int x = xInicio - (xInicio % tamanoGrid); x < xInicio + anchoVisible; x += tamanoGrid) {
             g2.drawLine(x, yInicio, x, yInicio + altoVisible);
         }
-        for (int y = yInicio - (yInicio % tamanoGrid);
-             y < yInicio + altoVisible;
-             y += tamanoGrid) {
+        for (int y = yInicio - (yInicio % tamanoGrid); y < yInicio + altoVisible; y += tamanoGrid) {
             g2.drawLine(xInicio, y, xInicio + anchoVisible, y);
         }
 

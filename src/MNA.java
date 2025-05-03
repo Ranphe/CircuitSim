@@ -112,33 +112,6 @@ public class MNA {
         return soluciones;
     }
 
-    public static void asignarVoltajesNodos(Circuito circuito, double[] soluciones) {
-        Map<Nodo, Integer> indices = circuito.getMapaIndicesNodosCanonicos();
-
-        // Asignar voltajes a los nodos según la solución, usando 0.0 para nodos de tierra
-        int numNodosSinTierra = circuito.getNumNodosCanonicos() - 1;
-        for(Nodo nodo : circuito.getNodos()) {
-            int indice = indices.getOrDefault(nodo, -1);
-            if (indice >= 0 && indice < numNodosSinTierra) {
-                nodo.getValor().setNumero(soluciones[indice]);
-            } else {
-                nodo.getValor().setNumero(0.0);
-            }
-        }
-    }
-
-    public static void asignarCorrientesFuentes(Circuito circuito, double[] soluciones) {
-        int numNodosSinTierra = circuito.getNumNodosCanonicos() - 1;
-        int contadorFuentes = 0;
-        for (Componente componente : circuito.getComponentes()) {
-            if (componente.getElemento() == 'F') {
-                double corrienteFuente = soluciones[numNodosSinTierra + contadorFuentes] * -1.0;
-                componente.getCorriente().setNumero(corrienteFuente);
-                contadorFuentes++;
-            }
-        }
-    }
-
     private static void intercambiarFilas(double[][] matrizMNA, int fila1, int fila2) {
         // Reubicar la fila con el pivote óptimo en la posición actual mediante intercambio de filas
         double[] temp = matrizMNA[fila1];

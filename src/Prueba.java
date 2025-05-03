@@ -1,5 +1,8 @@
 public class Prueba {
-    public static void unitaria(Circuito circuito, double[][] matriz, double[] solucion) {
+    public static void unitaria(Circuito circuito) {
+        double[][] matrizMNA = MNA.generarMatriz(circuito);
+        double[] solucion = MNA.resolverMatriz(matrizMNA);
+
         System.out.println("\n===============================");
         System.out.println("       CIRCUITO CARGADO");
         System.out.println("===============================");
@@ -18,7 +21,7 @@ public class Prueba {
         System.out.println("\n===============================");
         System.out.println("         MATRIZ MNA");
         System.out.println("===============================");
-        for (double[] fila : matriz) {
+        for (double[] fila : matrizMNA) {
             for (double valor : fila) {
                 System.out.printf("%7.3f", valor);
             }
@@ -38,6 +41,16 @@ public class Prueba {
         for (int i = 0; i < circuito.getNodos().size(); i++) {
             Nodo nodo = circuito.getNodos().get(i);
             System.out.println("Nodo " + i + ": " + nodo.getValor());
+        }
+
+        System.out.println("\n===============================");
+        System.out.println("   VOLTAJES Y CORRIENTES EN RESISTENCIAS");
+        System.out.println("===============================");
+        for (Componente componente : circuito.getComponentes()) {
+            if (componente.getElemento() == 'R') {
+                String etiqueta = String.format("R (%s)", componente.getValor());
+                System.out.printf("%-10s | Voltaje: %-10s | Corriente: %s\n", etiqueta, componente.getVoltaje(), componente.getCorriente());
+            }
         }
 
         System.out.println("\n===============================");

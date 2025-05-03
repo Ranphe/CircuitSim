@@ -38,13 +38,10 @@ public class Main extends JFrame {
                 File archivo = explorador.getSelectedFile();
                 try {
                     Circuito circuito = CircuitoParser.desdeArchivo(archivo);
-                    double[][] matrizMNA = MNA.generarMatriz(circuito);
-                    double[] solucion = MNA.resolverMatriz(matrizMNA);
-                    MNA.asignarVoltajesNodos(circuito, solucion);
-                    MNA.asignarCorrientesFuentes(circuito, solucion);
+                    SolucionadorCircuito.resolver(circuito);
 
                     // DEBUG
-                    Prueba.unitaria(circuito, matrizMNA, solucion);
+                    Prueba.unitaria(circuito);
 
                     cargarCircuito(circuito);
                 } catch (IOException ex) {
